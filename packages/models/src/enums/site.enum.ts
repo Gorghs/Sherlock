@@ -1,0 +1,198 @@
+export enum Site {
+  LINKEDIN = 'linkedin',
+  INDEED = 'indeed',
+  ZIP_RECRUITER = 'zip_recruiter',
+  GLASSDOOR = 'glassdoor',
+  GOOGLE = 'google',
+  BAYT = 'bayt',
+  NAUKRI = 'naukri',
+  BDJOBS = 'bdjobs',
+  INTERNSHALA = 'internshala',
+  EXA = 'exa',
+  UPWORK = 'upwork',
+  ASHBY = 'ashby',
+  GREENHOUSE = 'greenhouse',
+  LEVER = 'lever',
+  WORKABLE = 'workable',
+  SMARTRECRUITERS = 'smartrecruiters',
+  RIPPLING = 'rippling',
+  WORKDAY = 'workday',
+  AMAZON = 'amazon',
+  APPLE = 'apple',
+  MICROSOFT = 'microsoft',
+  NVIDIA = 'nvidia',
+  TIKTOK = 'tiktok',
+  UBER = 'uber',
+  CURSOR = 'cursor',
+  JOBICY = 'jobicy',
+  HIMALAYAS = 'himalayas',
+  REMOTEOK = 'remoteok',
+  REMOTIVE = 'remotive',
+  RECRUITEE = 'recruitee',
+  TEAMTAILOR = 'teamtailor',
+  ARBEITNOW = 'arbeitnow',
+  WEWORKREMOTELY = 'weworkremotely',
+  USAJOBS = 'usajobs',
+  ADZUNA = 'adzuna',
+  REED = 'reed',
+  JOOBLE = 'jooble',
+  CAREERJET = 'careerjet',
+  BAMBOOHR = 'bamboohr',
+  PERSONIO = 'personio',
+  JAZZHR = 'jazzhr',
+  DICE = 'dice',
+  SIMPLYHIRED = 'simplyhired',
+  WELLFOUND = 'wellfound',
+  STEPSTONE = 'stepstone',
+  MONSTER = 'monster',
+  CAREERBUILDER = 'careerbuilder',
+  ICIMS = 'icims',
+  TALEO = 'taleo',
+  SUCCESSFACTORS = 'successfactors',
+  JOBVITE = 'jobvite',
+  ADP = 'adp',
+  UKG = 'ukg',
+  // Phase 6: New company scrapers
+  GOOGLE_CAREERS = 'google_careers',
+  META = 'meta',
+  NETFLIX = 'netflix',
+  STRIPE = 'stripe',
+  OPENAI = 'openai',
+  // Phase 6: New ATS integrations
+  BREEZYHR = 'breezyhr',
+  COMEET = 'comeet',
+  PINPOINT = 'pinpoint',
+  // Phase 7: Additional job boards
+  BUILTIN = 'builtin',
+  SNAGAJOB = 'snagajob',
+  DRIBBBLE = 'dribbble',
+  // Phase 8: ATS Expansion
+  MANATAL = 'manatal',
+  PAYLOCITY = 'paylocity',
+  FRESHTEAM = 'freshteam',
+  BULLHORN = 'bullhorn',
+  TRAKSTAR = 'trakstar',
+  HIRINGTHING = 'hiringthing',
+  LOXO = 'loxo',
+  FOUNTAIN = 'fountain',
+  DEEL = 'deel',
+  PHENOM = 'phenom',
+  // Phase 8: Company scrapers
+  IBM = 'ibm',
+  BOEING = 'boeing',
+  ZOOM = 'zoom',
+  // Phase 9: Job board expansion
+  THEMUSE = 'themuse',
+  WORKINGNOMADS = 'workingnomads',
+  FOURDAYWEEK = 'fourdayweek',
+  STARTUPJOBS = 'startupjobs',
+  NODESK = 'nodesk',
+  WEB3CAREER = 'web3career',
+  ECHOJOBS = 'echojobs',
+  JOBSTREET = 'jobstreet',
+  // Phase 10: Government boards & ATS expansion
+  CAREERONESTOP = 'careeronestop',
+  ARBEITSAGENTUR = 'arbeitsagentur',
+  JOBYLON = 'jobylon',
+  HOMERUN = 'homerun',
+  // Phase 11: Niche boards & developer API expansion
+  HACKERNEWS = 'hackernews',
+  LANDINGJOBS = 'landingjobs',
+  FINDWORK = 'findwork',
+  JOBDATAAPI = 'jobdataapi',
+  // Phase 12: ATS & niche board expansion
+  AUTHENTICJOBS = 'authenticjobs',
+  JOBSCORE = 'jobscore',
+  TALENTLYFT = 'talentlyft',
+  // Phase 13: RSS niche board expansion
+  CRYPTOJOBSLIST = 'cryptojobslist',
+  JOBSPRESSO = 'jobspresso',
+  HIGHEREDJOBS = 'higheredjobs',
+  FOSSJOBS = 'fossjobs',
+  LARAJOBS = 'larajobs',
+  PYTHONJOBS = 'pythonjobs',
+  DRUPALJOBS = 'drupaljobs',
+  REALWORKFROMANYWHERE = 'realworkfromanywhere',
+  GOLANGJOBS = 'golangjobs',
+  WORDPRESSJOBS = 'wordpressjobs',
+  // Phase 14: API-key sources & ATS expansion
+  TALROO = 'talroo',
+  INFOJOBS = 'infojobs',
+  CRELATE = 'crelate',
+  ISMARTRECRUIT = 'ismartrecruit',
+  RECRUITERFLOW = 'recruiterflow',
+  // Phase 15: European government & regional boards
+  JOBTECHDEV = 'jobtechdev',
+  FRANCETRAVAIL = 'francetravail',
+  NAVJOBS = 'navjobs',
+  JOBSACUK = 'jobsacuk',
+  JOBINDEX = 'jobindex',
+  // Phase 16: Global expansion (LatAm, gig, startup, Canada)
+  GETONBOARD = 'getonboard',
+  FREELANCERCOM = 'freelancercom',
+  JOINRISE = 'joinrise',
+  CANADAJOBBANK = 'canadajobbank',
+  // Phase 17: Niche & international expansion (NGO, UN, IT)
+  RELIEFWEB = 'reliefweb',
+  UNDPJOBS = 'undpjobs',
+  DEVITJOBS = 'devitjobs',
+  // Phase 18: Niche RSS expansion (tech, design, environment, regional)
+  PYJOBS = 'pyjobs',
+  VUEJOBS = 'vuejobs',
+  CONSERVATIONJOBS = 'conservationjobs',
+  COROFLOT = 'coroflot',
+  BERLINSTARTUPJOBS = 'berlinstartupjobs',
+  // Phase 19: Tech niche, crypto, regional expansion
+  RAILSJOBS = 'railsjobs',
+  ELIXIRJOBS = 'elixirjobs',
+  CRUNCHBOARD = 'crunchboard',
+  CRYPTOCURRENCYJOBS = 'cryptocurrencyjobs',
+  HASJOB = 'hasjob',
+  // Phase 20: European regional & niche expansion
+  ICRUNCHDATA = 'icrunchdata',
+  SWISSDEVJOBS = 'swissdevjobs',
+  GERMANTECHJOBS = 'germantechjobs',
+  VIRTUALVOCATIONS = 'virtualvocations',
+  NOFLUFFJOBS = 'nofluffjobs',
+  // Phase 21: Niche & academic expansion
+  GREENJOBSBOARD = 'greenjobsboard',
+  EUROJOBS = 'eurojobs',
+  OPENSOURCEDESIGNJOBS = 'opensourcedesignjobs',
+  ACADEMICCAREERS = 'academiccareers',
+  REMOTEFIRSTJOBS = 'remotefirstjobs',
+  // Phase 22: Eastern European, CIS & Singapore expansion
+  DJINNI = 'djinni',
+  HEADHUNTER = 'headhunter',
+  HABRCAREER = 'habrcareer',
+  MYCAREERSFUTURE = 'mycareersfuture',
+  // Phase 23: Japan, Nordic & Swiss expansion
+  JOBSINJAPAN = 'jobsinjapan',
+  DUUNITORI = 'duunitori',
+  JOBSCH = 'jobsch',
+  // Phase 24: UK & mobile dev expansion
+  GUARDIANJOBS = 'guardianjobs',
+  ANDROIDJOBS = 'androidjobs',
+  IOSDEVJOBS = 'iosdevjobs',
+  // Phase 25: DevOps, FP, diversity & niche expansion
+  DEVOPSJOBS = 'devopsjobs',
+  FUNCTIONALWORKS = 'functionalworks',
+  POWERTOFLY = 'powertofly',
+  CLOJUREJOBS = 'clojurejobs',
+  // Phase 26: Environmental & conservation
+  ECOJOBS = 'ecojobs',
+  // Phase 27: Asia-Pacific & US tech expansion
+  JOBSDB = 'jobsdb',
+  TECHCAREERS = 'techcareers',
+}
+
+/**
+ * Map a raw string (case-insensitive) to a Site enum value.
+ */
+export function mapStringToSite(siteName: string): Site {
+  const key = siteName.toUpperCase() as keyof typeof Site;
+  if (Site[key] !== undefined) {
+    return Site[key];
+  }
+  // Fallback for custom plugins/scrapers
+  return siteName.toLowerCase() as Site;
+}

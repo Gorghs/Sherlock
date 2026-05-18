@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:,">
+    <title>Job Search Platform - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #e0e0e0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .header-nav a {
+            text-decoration: none;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .header-nav a:hover {
+            color: #fff;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #4ade80;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input[type="time"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input[type="time"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+        }
+
+        .time-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .time-controls select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .time-controls select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+        }
+
+        .schedule-note {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.7rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .recipients-list {
+            margin-top: 2rem;
+        }
+
+        .activity-card {
+            grid-column: 1 / -1;
+        }
+
+        .jobs-card {
+            grid-column: 1 / -1;
+        }
+
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .jobs-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .jobs-stat {
+            padding: 1rem 1.1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .jobs-stat-label {
+            display: block;
+            color: #8f9aa8;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.35rem;
+        }
+
+        .jobs-stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f3f4f6;
+        }
+
+        .jobs-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .job-item {
+            padding: 1.1rem;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .job-item-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .job-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .job-company {
+            color: #cfd8e3;
+            font-size: 0.92rem;
+        }
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
+            color: #99a4b3;
+            font-size: 0.84rem;
+        }
+
+        .job-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d9e3ef;
+            font-size: 0.78rem;
+            letter-spacing: 0.3px;
+        }
+
+        .job-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .apply-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .apply-link:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(255, 255, 255, 0.12);
+        }
+
+        .expires-note {
+            color: #9aa5b5;
+            font-size: 0.82rem;
+        }
+
+        .activity-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.85rem;
+            color: #bbb;
+            flex-wrap: wrap;
+        }
+
+        .activity-state {
+            font-weight: 600;
+        }
+
+        .activity-state.running {
+            color: #4ade80;
+        }
+
+        .activity-state.idle {
+            color: #888;
+        }
+
+        .activity-log-box {
+            background: #0a0b0f;
+            color: #d7e0ea;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 0.9rem;
+            min-height: 220px;
+            max-height: 320px;
+            overflow-y: auto;
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 0.78rem;
+            line-height: 1.45;
+        }
+
+        .activity-row {
+            margin-bottom: 0.35rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .activity-row.info {
+            color: #d7e0ea;
+        }
+
+        .activity-row.warn {
+            color: #ffd666;
+        }
+
+        .activity-row.error {
+            color: #ff9a9a;
+        }
+
+        .activity-empty {
+            color: #8f9aa8;
+        }
+
+        .recipient-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .recipient-email {
+            font-size: 0.95rem;
+            color: #ccc;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .success-message {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            color: #4ade80;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .config-display {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .config-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .config-item:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            color: #888;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .config-value {
+            color: #4ade80;
+            font-weight: 500;
+        }
+
+        .section-note {
+            color: #8f9aa8;
+            font-size: 0.9rem;
+            margin-top: 0.35rem;
+        }
+
+        .jobs-refresh-btn {
+            flex: 0 0 auto;
+            min-width: 140px;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+            text-align: center;
+            color: #666;
+            margin-top: 5rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .jobs-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .jobs-refresh-btn {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .header-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">JOB SEARCH</div>
+            <div class="header-nav">
+                <a href="#home">Dashboard</a>
+                <a href="#today-jobs">Today's Jobs</a>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Active</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Dashboard Control</h1>
+            <p>Manage your daily job search triggers and notification recipients</p>
+        </section>
+
+        <div class="content-grid">
+            <!-- Scheduler Configuration Card -->
+            <div class="card">
+                <h2>Schedule Settings</h2>
+                <div class="success-message" id="schedulerMessage"></div>
+                
+                <div class="form-group">
+                    <label>Daily Trigger Time (IST)</label>
+                    <div class="time-controls">
+                        <select id="triggerHour"></select>
+                        <select id="triggerMinute"></select>
+                        <select id="triggerPeriod">
+                            <option value="AM">AM</option>
+                            <option value="PM">PM</option>
+                        </select>
+                    </div>
+                    <div class="schedule-note" id="scheduleConversion">Selected: 02:30 PM IST</div>
+                </div>
+
+                <p style="font-size: 0.9rem; color: #666; margin: 1.5rem 0;">
+                    Set your preferred India time.
+                </p>
+
+                <div class="card-divider"></div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="updateSchedule()">Update Schedule</button>
+                    <button class="btn btn-secondary" id="instantTriggerBtn" onclick="triggerNow()">Check Now</button>
+                </div>
+
+                <div class="config-display">
+                    <div class="config-item">
+                        <span class="config-label">Current Schedule</span>
+                        <span class="config-value" id="currentSchedule">02:30 PM IST</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Status</span>
+                        <span class="config-value">Active</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="config-label">Last Run</span>
+                        <span class="config-value" id="lastRun">Not run yet</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recipients Management Card -->
+            <div class="card">
+                <h2>Email Recipients</h2>
+                <div class="success-message" id="recipientMessage"></div>
+
+                <div class="form-group">
+                    <label for="recipientEmail">Add Recipient Email</label>
+                    <input type="email" id="recipientEmail" placeholder="user@example.com">
+                </div>
+
+                <button class="btn btn-primary" onclick="addRecipient()">Add Recipient</button>
+
+                <div class="card-divider"></div>
+
+                <div class="recipients-list" id="recipientsList">
+                    <div class="empty-state">No recipients added yet</div>
+                </div>
+
+                <div class="config-display">
+                    <div class="config-item">
+                        <span class="config-label">Total Recipients</span>
+                        <span class="config-value" id="recipientCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card activity-card">
+                <h2>Current Agent Activity</h2>
+                <div class="activity-meta">
+                    <div>Run State: <span id="activityState" class="activity-state idle">Idle</span></div>
+                    <div>Last Successful Run: <span id="activityLastRun">Not run yet</span></div>
+                </div>
+                <div id="activityLogBox" class="activity-log-box">
+                    <div class="activity-empty">Waiting for scheduler activity...</div>
+                </div>
+            </div>
+
+            <div class="card jobs-card" id="today-jobs">
+                <div class="jobs-header">
+                    <div>
+                        <h2>Today's Saved Jobs</h2>
+                        <div class="section-note">These are the jobs already found and stored in the frontend cache. Entries expire automatically after 24 hours.</div>
+                    </div>
+                    <button class="btn btn-secondary jobs-refresh-btn" onclick="fetchSavedJobs()">Refresh List</button>
+                </div>
+
+                <div class="jobs-summary">
+                    <div class="jobs-stat">
+                        <span class="jobs-stat-label">Jobs visible</span>
+                        <span class="jobs-stat-value" id="savedJobsCount">0</span>
+                    </div>
+                    <div class="jobs-stat">
+                        <span class="jobs-stat-label">Retention</span>
+                        <span class="jobs-stat-value">24h</span>
+                    </div>
+                    <div class="jobs-stat">
+                        <span class="jobs-stat-label">Oldest expiry</span>
+                        <span class="jobs-stat-value" id="savedJobsExpiry">--</span>
+                    </div>
+                </div>
+
+                <div id="savedJobsList" class="jobs-list">
+                    <div class="empty-state">No saved jobs yet. When the scheduler finds jobs, they will appear here without running a new search.</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Job Search Platform &copy; 2026. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Initialize application
+        let recipients = [];
+        let schedulerTimeUtc = '09:00';
+        let lastSuccessfulRunUtc = null;
+        let activityPollTimer = null;
+        let savedJobsPollTimer = null;
+
+        function format12Hour(hour24, minute) {
+            const period = hour24 >= 12 ? 'PM' : 'AM';
+            const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
+            return `${String(hour12).padStart(2, '0')}:${String(minute).padStart(2, '0')} ${period}`;
+        }
+
+        function utcToIstParts(utcTime) {
+            const [h, m] = utcTime.split(':').map(Number);
+            const utcMinutes = (h * 60) + m;
+            const istMinutes = (utcMinutes + 330 + 1440) % 1440;
+            const istHour24 = Math.floor(istMinutes / 60);
+            const istMinute = istMinutes % 60;
+            const period = istHour24 >= 12 ? 'PM' : 'AM';
+            const hour12 = istHour24 % 12 === 0 ? 12 : istHour24 % 12;
+
+            return {
+                hour: String(hour12).padStart(2, '0'),
+                minute: String(istMinute).padStart(2, '0'),
+                period,
+            };
+        }
+
+        function istPartsToUtc(hour12, minute, period) {
+            let hour24 = Number(hour12) % 12;
+            if (period === 'PM') {
+                hour24 += 12;
+            }
+
+            const istMinutes = (hour24 * 60) + Number(minute);
+            const utcMinutes = (istMinutes - 330 + 1440) % 1440;
+            const utcHour = Math.floor(utcMinutes / 60);
+            const utcMinute = utcMinutes % 60;
+            return `${String(utcHour).padStart(2, '0')}:${String(utcMinute).padStart(2, '0')}`;
+        }
+
+        function populateTimeDropdowns() {
+            const hourSelect = document.getElementById('triggerHour');
+            const minuteSelect = document.getElementById('triggerMinute');
+
+            hourSelect.innerHTML = '';
+            minuteSelect.innerHTML = '';
+
+            for (let h = 1; h <= 12; h += 1) {
+                const value = String(h).padStart(2, '0');
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value;
+                hourSelect.appendChild(option);
+            }
+
+            for (let m = 0; m <= 59; m += 1) {
+                const value = String(m).padStart(2, '0');
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value;
+                minuteSelect.appendChild(option);
+            }
+        }
+
+        function applyUtcTimeToIstUi(utcTime) {
+            const ist = utcToIstParts(utcTime);
+            document.getElementById('triggerHour').value = ist.hour;
+            document.getElementById('triggerMinute').value = ist.minute;
+            document.getElementById('triggerPeriod').value = ist.period;
+            updateConversionHint();
+        }
+
+        function getSelectedUtcFromIstUi() {
+            const hour = document.getElementById('triggerHour').value;
+            const minute = document.getElementById('triggerMinute').value;
+            const period = document.getElementById('triggerPeriod').value;
+            return istPartsToUtc(hour, minute, period);
+        }
+
+        function updateConversionHint() {
+            const utc = getSelectedUtcFromIstUi();
+            const ist = utcToIstParts(utc);
+            document.getElementById('scheduleConversion').textContent = `Selected: ${ist.hour}:${ist.minute} ${ist.period} IST`;
+        }
+
+        function updateScheduleText(utcTime) {
+            const ist = utcToIstParts(utcTime);
+            document.getElementById('currentSchedule').textContent = `${ist.hour}:${ist.minute} ${ist.period} IST`;
+        }
+
+        function updateLastRunText(lastRunUtc) {
+            const lastRunElement = document.getElementById('lastRun');
+            if (!lastRunUtc) {
+                lastRunElement.textContent = 'Not run yet';
+                return;
+            }
+
+            const date = new Date(lastRunUtc);
+            const formatted = date.toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            });
+            lastRunElement.textContent = `${formatted} IST`;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function formatDurationHours(hoursRemaining) {
+            if (!Number.isFinite(hoursRemaining)) {
+                return '--';
+            }
+
+            if (hoursRemaining <= 0) {
+                return 'Expires soon';
+            }
+
+            return `${hoursRemaining.toFixed(1)}h left`;
+        }
+
+        function formatJobTimestamp(iso) {
+            if (!iso) return '--';
+
+            return new Date(iso).toLocaleString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                month: 'short',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            }) + ' IST';
+        }
+
+        function formatJobLocation(job) {
+            const parts = [job.location, job.jobType].map((part) => String(part || '').trim()).filter(Boolean);
+            return parts.length > 0 ? parts.join(' · ') : 'Location not specified';
+        }
+
+        function renderSavedJobs(payload) {
+            const list = document.getElementById('savedJobsList');
+            const count = document.getElementById('savedJobsCount');
+            const expiry = document.getElementById('savedJobsExpiry');
+            const jobs = Array.isArray(payload?.jobs) ? payload.jobs : [];
+
+            count.textContent = String(jobs.length);
+
+            if (jobs.length === 0) {
+                expiry.textContent = '--';
+                list.innerHTML = '<div class="empty-state">No saved jobs yet. When the scheduler finds jobs, they will appear here without running a new search.</div>';
+                return;
+            }
+
+            const soonestExpiry = jobs
+                .map((job) => Number(job.hoursRemaining))
+                .filter((value) => Number.isFinite(value))
+                .reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY);
+
+            expiry.textContent = Number.isFinite(soonestExpiry) ? formatDurationHours(soonestExpiry) : '--';
+
+            list.innerHTML = jobs.map((job) => {
+                const title = escapeHtml(job.jobTitle || 'Untitled role');
+                const company = escapeHtml(job.company || 'Unknown company');
+                const source = escapeHtml(job.source || 'unknown');
+                const savedAt = formatJobTimestamp(job.savedAt);
+                const expires = formatDurationHours(Number(job.hoursRemaining));
+                const location = escapeHtml(formatJobLocation(job));
+                const salary = job.salary ? `<span class="job-pill">Salary: ${escapeHtml(job.salary)}</span>` : '';
+                const keywordChips = Array.isArray(job.keywords)
+                    ? job.keywords.slice(0, 4).map((keyword) => `<span class="job-pill">${escapeHtml(keyword)}</span>`).join('')
+                    : '';
+
+                return `
+                    <article class="job-item">
+                        <div class="job-item-top">
+                            <div>
+                                <div class="job-title">${title}</div>
+                                <div class="job-company">${company}</div>
+                            </div>
+                            <div class="job-pill">Source: ${source}</div>
+                        </div>
+                        <div class="job-meta">
+                            <span class="job-pill">${location}</span>
+                            <span class="job-pill">Saved ${escapeHtml(savedAt)}</span>
+                            <span class="job-pill">${escapeHtml(expires)}</span>
+                            ${salary}
+                            ${keywordChips}
+                        </div>
+                        <div class="job-actions">
+                            <div class="expires-note">Auto-removes after 24 hours from saved time.</div>
+                            <a class="apply-link" href="${escapeHtml(job.link || '#')}" target="_blank" rel="noreferrer noopener">Apply link</a>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        async function fetchSavedJobs() {
+            try {
+                const response = await fetch('/scheduler/jobs/today');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const payload = await response.json();
+                renderSavedJobs(payload);
+            } catch (_) {
+                const list = document.getElementById('savedJobsList');
+                const count = document.getElementById('savedJobsCount');
+                const expiry = document.getElementById('savedJobsExpiry');
+                if (count) count.textContent = '0';
+                if (expiry) expiry.textContent = '--';
+                if (list) {
+                    list.innerHTML = '<div class="empty-state">Unable to load saved jobs from the backend.</div>';
+                }
+            }
+        }
+
+        async function loadServerConfig() {
+            try {
+                const response = await fetch('/scheduler/config');
+                if (!response.ok) return;
+
+                const config = await response.json();
+                recipients = Array.isArray(config.recipients)
+                    ? config.recipients.map((email) => String(email).trim().toLowerCase()).filter(Boolean)
+                    : [];
+
+                if (config.time && /^\d{2}:\d{2}$/.test(config.time)) {
+                    schedulerTimeUtc = config.time;
+                }
+
+                lastSuccessfulRunUtc = config.lastSuccessfulRunUtc || null;
+            } catch (_) {
+                showMessage('recipientMessage', 'Failed to load backend config', 'error');
+            }
+        }
+
+        async function initializeApp() {
+            populateTimeDropdowns();
+            await loadServerConfig();
+            applyUtcTimeToIstUi(schedulerTimeUtc);
+            updateScheduleText(schedulerTimeUtc);
+            updateLastRunText(lastSuccessfulRunUtc);
+            renderRecipients();
+            startActivityPolling();
+            startSavedJobsPolling();
+            await fetchActivities();
+            await fetchSavedJobs();
+        }
+
+        async function updateSchedule() {
+            const time = getSelectedUtcFromIstUi();
+
+            try {
+                const response = await fetch('/scheduler/config/time', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ time }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Unable to update schedule');
+                }
+
+                const payload = await response.json();
+                schedulerTimeUtc = payload?.config?.time || time;
+                applyUtcTimeToIstUi(schedulerTimeUtc);
+                updateScheduleText(schedulerTimeUtc);
+            } catch (_) {
+                showMessage('schedulerMessage', 'Failed to update schedule', 'error');
+                return;
+            }
+            
+            showMessage('schedulerMessage', 'Schedule updated successfully');
+        }
+
+        async function triggerNow() {
+            const triggerBtn = document.getElementById('instantTriggerBtn');
+            const originalText = triggerBtn.textContent;
+            triggerBtn.disabled = true;
+            triggerBtn.textContent = 'Triggering...';
+
+            try {
+                const response = await fetch('/scheduler/trigger', {
+                    method: 'POST',
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || `HTTP ${response.status}`);
+                }
+
+                const payload = await response.json();
+                if (payload?.status === 'success') {
+                    showMessage('schedulerMessage', 'Instant trigger started. Notifications are sent only when new unsent jobs are found.');
+                    await fetchActivities();
+                    await fetchSavedJobs();
+                    setTimeout(async () => {
+                        await loadServerConfig();
+                        updateLastRunText(lastSuccessfulRunUtc);
+                        await fetchSavedJobs();
+                    }, 3000);
+                } else if (payload?.status === 'busy') {
+                    showMessage('schedulerMessage', payload?.message || 'Scheduler is already running', 'error');
+                    await fetchActivities();
+                    await fetchSavedJobs();
+                } else {
+                    showMessage('schedulerMessage', payload?.message || 'Trigger failed', 'error');
+                    await fetchActivities();
+                    await fetchSavedJobs();
+                }
+            } catch (error) {
+                showMessage('schedulerMessage', `Failed to trigger scheduler: ${error?.message || 'Unknown error'}`, 'error');
+                await fetchActivities();
+                await fetchSavedJobs();
+            } finally {
+                triggerBtn.disabled = false;
+                triggerBtn.textContent = originalText;
+            }
+        }
+
+        function formatActivityTime(iso) {
+            if (!iso) return '--';
+            const date = new Date(iso);
+            return date.toLocaleTimeString('en-IN', {
+                timeZone: 'Asia/Kolkata',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true,
+            });
+        }
+
+        function renderActivities(payload) {
+            const stateEl = document.getElementById('activityState');
+            const lastRunEl = document.getElementById('activityLastRun');
+            const logBox = document.getElementById('activityLogBox');
+
+            const isRunning = Boolean(payload?.isRunning);
+            stateEl.textContent = isRunning ? 'Running' : 'Idle';
+            stateEl.classList.remove('running', 'idle');
+            stateEl.classList.add(isRunning ? 'running' : 'idle');
+
+            if (payload?.lastSuccessfulRunUtc) {
+                const dt = new Date(payload.lastSuccessfulRunUtc);
+                lastRunEl.textContent = dt.toLocaleString('en-IN', {
+                    timeZone: 'Asia/Kolkata',
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                }) + ' IST';
+            } else {
+                lastRunEl.textContent = 'Not run yet';
+            }
+
+            const entries = Array.isArray(payload?.entries) ? payload.entries : [];
+            if (entries.length === 0) {
+                logBox.innerHTML = '<div class="activity-empty">Waiting for scheduler activity...</div>';
+                return;
+            }
+
+            logBox.innerHTML = entries
+                .slice(-120)
+                .map((entry) => {
+                    const level = entry.level || 'info';
+                    const time = formatActivityTime(entry.timestamp);
+                    const msg = String(entry.message || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    const label = level.toUpperCase().padEnd(5, ' ');
+                    return `<div class="activity-row ${level}">[${time}] ${label} ${msg}</div>`;
+                })
+                .join('');
+
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        async function fetchActivities() {
+            try {
+                const response = await fetch('/scheduler/activities');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const payload = await response.json();
+                renderActivities(payload);
+            } catch (_) {
+                const logBox = document.getElementById('activityLogBox');
+                const stateEl = document.getElementById('activityState');
+                if (stateEl) {
+                    stateEl.textContent = 'Unavailable';
+                    stateEl.classList.remove('running', 'idle');
+                    stateEl.classList.add('idle');
+                }
+                if (logBox) {
+                    logBox.innerHTML = '<div class="activity-empty">Unable to load activity stream from backend.</div>';
+                }
+            }
+        }
+
+        function startActivityPolling() {
+            if (activityPollTimer) {
+                clearInterval(activityPollTimer);
+            }
+            activityPollTimer = setInterval(fetchActivities, 3000);
+        }
+
+        function startSavedJobsPolling() {
+            if (savedJobsPollTimer) {
+                clearInterval(savedJobsPollTimer);
+            }
+            savedJobsPollTimer = setInterval(fetchSavedJobs, 60000);
+        }
+
+        async function addRecipient() {
+            const email = document.getElementById('recipientEmail').value.trim();
+            
+            if (!email) {
+                showMessage('recipientMessage', 'Please enter an email address', 'error');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showMessage('recipientMessage', 'Please enter a valid email address', 'error');
+                return;
+            }
+
+            const normalizedEmail = email.toLowerCase();
+
+            if (recipients.includes(normalizedEmail)) {
+                showMessage('recipientMessage', 'This recipient is already added', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/scheduler/config/recipients', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: normalizedEmail }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Unable to add recipient');
+                }
+
+                const payload = await response.json();
+                recipients = Array.isArray(payload?.config?.recipients)
+                    ? payload.config.recipients
+                    : recipients;
+            } catch (_) {
+                showMessage('recipientMessage', 'Failed to add recipient', 'error');
+                return;
+            }
+
+            document.getElementById('recipientEmail').value = '';
+            renderRecipients();
+            showMessage('recipientMessage', 'Recipient added successfully');
+        }
+
+        async function deleteRecipient(email) {
+            try {
+                const response = await fetch(`/scheduler/config/recipients/${encodeURIComponent(email)}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Unable to remove recipient');
+                }
+
+                const payload = await response.json();
+                recipients = Array.isArray(payload?.config?.recipients)
+                    ? payload.config.recipients
+                    : recipients.filter(r => r !== email);
+            } catch (_) {
+                showMessage('recipientMessage', 'Failed to remove recipient', 'error');
+                return;
+            }
+
+            renderRecipients();
+            showMessage('recipientMessage', 'Recipient removed');
+        }
+
+        function renderRecipients() {
+            const container = document.getElementById('recipientsList');
+            const count = document.getElementById('recipientCount');
+
+            count.textContent = recipients.length;
+
+            if (recipients.length === 0) {
+                container.innerHTML = '<div class="empty-state">No recipients added yet</div>';
+                return;
+            }
+
+            container.innerHTML = recipients.map(email => `
+                <div class="recipient-item">
+                    <span class="recipient-email">${email}</span>
+                    <button class="btn-delete" onclick="deleteRecipient('${email}')">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function showMessage(elementId, message, type = 'success') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.classList.add('show');
+            
+            setTimeout(() => {
+                element.classList.remove('show');
+            }, 3000);
+        }
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Handle Enter key in email input
+        document.getElementById('recipientEmail').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addRecipient();
+            }
+        });
+
+        document.addEventListener('change', (e) => {
+            const targetId = e.target && e.target.id;
+            if (targetId === 'triggerHour' || targetId === 'triggerMinute' || targetId === 'triggerPeriod') {
+                updateConversionHint();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>

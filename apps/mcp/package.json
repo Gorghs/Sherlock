@@ -1,0 +1,25 @@
+{
+  "name": "@sherlock/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP (Model Context Protocol) server for Sherlock — allows AI assistants like ChatGPT and Copilot to search and browse jobs",
+  "main": "dist/index.js",
+  "bin": {
+    "sherlock-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.0",
+    "zod": "^3.23.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "ts-node": "^10.9.0",
+    "@types/node": "^20.0.0"
+  }
+}

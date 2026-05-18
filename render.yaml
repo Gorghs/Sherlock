@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: ever-jobs-api
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /data
+      - key: SCHEDULER_ENABLED
+        value: 'true'
+      - key: SCHEDULER_TIME
+        value: '09:00'
+      - key: FILTER_FRESHERS_ONLY
+        value: 'true'
+      - key: FILTER_INDIA_OFFICE_ONLY
+        value: 'true'
+      - key: FILTER_ALLOW_REMOTE
+        value: 'true'
+      - key: ENABLE_CACHE
+        value: 'false'
+      - key: LOG_LEVEL
+        value: 'info'
+
+      # Add these sensitive values in Render dashboard:
+      # TELEGRAM_BOT_TOKEN
+      # TELEGRAM_CHAT_ID
+      # GEMINI_API_KEY
+
+    pricing:
+      type: standard
+      cpuCores: 1
+      memoryGB: 1
+    
+    disk:
+      name: job-search-data
+      sizeGB: 1
+      mountPath: /data
+    
+    autoDeploy: true
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-store
