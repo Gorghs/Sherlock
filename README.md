@@ -1,393 +1,51 @@
-# Sherlock - The Smarter Job Hunter
+# Sherlock
 
-> Stop browsing 160 job sites every day. Let Sherlock do it for you.
+Sherlock is a job aggregation engine that searches many job boards in parallel and exposes the results through API, CLI, GraphQL, and MCP integrations.
 
+## Features
 
-
-## What is Sherlock?
-
-Sherlock is an intelligent job aggregation engine that searches 160+ job boards **simultaneously** and brings you the best results in seconds. Whether you're using the REST API, GraphQL, CLI, or email digests, you get the same powerful job discovery engine.
-
-No logins. No captchas. No BS. Just jobs.
-
----
-
-## Why Sherlock Exists
-
-Job hunting sucks. You need to juggle LinkedIn, Indeed, Glassdoor, GitHub Jobs, Upwork, Naukri, BDJobs, and 150+ other sites. Each one has a different format, different filters, different ways to apply.
-
-Sherlock solves this by building a **single unified interface** to all of them. Search once, get results from everywhere.
-
----
-
-## What You Get
-
-✨ **160+ Job Sources** — LinkedIn, Indeed, Glassdoor, GitHub, Upwork, Naukri, BDJobs, Wellfound, RemoteOK, Stack Overflow, and tons more  
-
-🚀 **Fast** — All sources searched in parallel. Get results in ~3-5 seconds  
-
-🤖 **AI-Powered Scoring** — Google Gemini rates job relevance so you see what matters  
-
-📧 **Daily Emails** — Automatic job digests delivered every morning to multiple recipients  
-
-🔌 **Multiple Interfaces** — REST API, GraphQL, CLI, or MCP Protocol. Use what works for you  
-
-🎯 **No Duplicates** — Smart deduplication means you never see the same job twice  
-
-⚙️ **Zero Setup** — Most job boards work without API keys. Just run it  
-
-🧩 **Extensible** — Add new sources as modular packages  
-
----
+- Search across 160+ job sources
+- Normalized results with deduplication
+- Optional AI-based relevance scoring
+- Email digests and scheduler support
+- Modular source packages
 
 ## Quick Start
 
-### 1. Install
-
 ```bash
-git clone https://github.com/Gorghs/Sherlock.git
-cd Sherlock
 npm install
 npm run build
-```
-
-### 2. Run
-
-```bash
 npm run start:dev
 ```
 
-The API is now at `http://localhost:3001`.
-
-### 3. Search
-
-**Via REST API:**
-
-```bash
-curl -X POST http://localhost:3001/api/jobs/search \
-  -H "Content-Type: application/json" \
-  -d '{
-    "searchTerm": "Product Manager",
-    "siteNames": ["linkedin", "indeed"],
-    "resultsWanted": 50
-  }'
-```
-
-**Via CLI:**
-
-```bash
-npm run cli -- search -q "Backend Engineer" --sites "github,dice,techcrunch"
-```
-
-**Via GraphQL:**
-
-```bash
-curl -X POST http://localhost:3001/graphql \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "{ searchJobs(searchTerm: \"Data Scientist\", limit: 20) { title company location } }"
-  }'
-```
-
-**Via Daily Email:**
-
-Set up your `.env` file (see below) and Sherlock will automatically email you the best matches every morning at 9 AM UTC.
-
----
+The API runs on `http://localhost:3001`.
 
 ## Configuration
 
-Create a `.env` file:
+Create a `.env` file if you want email digests or AI scoring:
 
 ```bash
-# Email setup (optional, for daily digests)
 EMAIL_GMAIL_USER=your-email@gmail.com
 EMAIL_GMAIL_PASSWORD=your-app-password
-EMAIL_RECIPIENT_EMAIL=you@example.com,team@company.com
-
-# AI filtering (optional)
+EMAIL_RECIPIENT_EMAIL=you@example.com
 GEMINI_API_KEY=your-gemini-api-key
-
-# Scheduler (optional)
 SCHEDULER_ENABLED=true
 SCHEDULER_TIME=0 9 * * *
 ```
 
-That's it. Email recipients can be comma-separated. No databases. No complicated setup.
-
----
-
-## How It Works
-
-```
-1. You search for "Product Manager"
-                   ↓
-2. Sherlock queries 160+ sources in parallel
-   - LinkedIn, Indeed, Glassdoor, GitHub, Upwork, etc.
-                   ↓
-3. Results normalized into standard format
-                   ↓
-4. AI scores each job for relevance (0-100)
-                   ↓
-5. Duplicates removed
-                   ↓
-6. Results delivered via API, email, CLI, or GraphQL
-```
-
----
-
-## Example Response
-
-```json
-{
-  "jobs": [
-    {
-      "jobTitle": "Senior Product Manager",
-      "company": "TechCorp",
-      "location": "San Francisco, CA",
-      "jobType": "Full-time",
-      "salary": "$180,000 - $220,000",
-      "description": "Lead product strategy...",
-      "url": "https://example.com/jobs/123",
-      "source": "LinkedIn",
-      "relevanceScore": 92,
-      "postedDate": "2026-04-01"
-    }
-  ],
-  "total": 342,
-  "searchTime": 3240
-}
-```
-
----
-
-## Supported Job Boards
-
-**Popular Platforms:** LinkedIn, Indeed, Glassdoor, ZipRecruiter, CareerBuilder, SimplyHired, Monster
-
-**Tech-Focused:** GitHub Jobs, Stack Overflow, Dice, Wellfound, Startup.jobs, Hacker News
-
-**Remote:** RemoteOK, Remotive, FlexJobs, Working Nomads, NoDesk, We Work Remotely
-
-**Freelance:** Upwork, Freelancer, Toptal, Fiverr, PeoplePerHour
-
-**International:** Naukri (India), BDJobs (Bangladesh), Bayt (Middle East), JobStreet (Asia-Pacific)
-
-**Specialized:** Dribbble (Design), CryptoJobsList (Web3), FOSS Jobs (Open Source), Behance (Creative)
-
-**ATS Platforms:** Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Rippling, Workday, BambooHR, and 30+ more
-
----
-
-## Deployment
-
-### Local Development
-
-```bash
-npm run start:dev
-```
-
-### Docker
-
-```bash
-docker build -t sherlock .
-docker run -p 3001:3001 sherlock
-```
-
-### Render.com / Heroku
-
-1. Push code to GitHub
-2. Create new Web Service on Render/Heroku
-3. Add environment variables
-4. Deploy
-
----
-
-## Usage Examples
-
-**Search for remote frontend jobs:**
+## Usage
 
 ```bash
 curl -X POST http://localhost:3001/api/jobs/search \
   -H "Content-Type: application/json" \
-  -d '{
-    "searchTerm": "Frontend Engineer",
-    "location": "Remote",
-    "siteNames": ["linkedin", "indeed", "remoteok"],
-    "resultsWanted": 30
-  }'
+  -d '{"searchTerm":"Product Manager","siteNames":["linkedin","indeed"],"resultsWanted":50}'
 ```
 
-**CLI with email recipient:**
+## Deploy
 
-```bash
-npm run cli -- search -q "UX Designer" --sites "dribbble,behance" -f table
-```
-
-**Get salary insights:**
-
-```bash
-curl -X POST http://localhost:3001/api/jobs/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"searchTerm": "DevOps", "siteNames": ["indeed"]}'
-```
-
----
-
-## Open Source & Community
-
-This project is **MIT licensed**. You're free to:
-
-- ✅ Use it for yourself
-- ✅ Deploy it for your team
-- ✅ Modify and remix the code
-- ✅ Add new job sources
-- ✅ Integrate it into other tools
-
----
-
-## Response Schema
-
-```
-JobPost
-├── id
-├── site
-├── title
-├── companyName
-├── companyUrl
-├── jobUrl
-├── jobUrlDirect
-├── location
-│   ├── city
-│   ├── state
-│   └── country
-├── description
-├── datePosted
-├── isRemote
-├── jobType[]                    fulltime, parttime, internship, contract
-├── compensation
-│   ├── interval                 yearly, monthly, weekly, daily, hourly
-│   ├── minAmount
-│   ├── maxAmount
-│   └── currency
-├── emails[]
-├── listingType
-│
-├── department                   (ATS, Company scrapers)
-├── team                         (ATS, Company scrapers)
-├── atsId                        (ATS scrapers)
-├── atsType                      (ATS scrapers)
-├── employmentType               (ATS, Company scrapers)
-├── applyUrl                     (ATS scrapers)
-│
-├── jobLevel                     (LinkedIn)
-├── jobFunction                  (LinkedIn)
-├── companyIndustry              (LinkedIn, Indeed)
-│
-├── companyAddresses             (Indeed)
-├── companyNumEmployees          (Indeed)
-├── companyRevenue               (Indeed)
-├── companyDescription           (Indeed)
-├── companyLogo                  (Indeed)
-├── bannerPhotoUrl               (Indeed)
-│
-├── skills[]                     (Naukri)
-├── experienceRange              (Naukri)
-├── companyRating                (Naukri)
-├── companyReviewsCount          (Naukri)
-├── vacancyCount                 (Naukri)
-└── workFromHomeType             (Naukri)
-```
-
----
-
-## Project Structure
-
-```
-ever-jobs/
-├── apps/
-│   ├── api/                          NestJS REST API
-│   │   └── src/
-│   │       ├── main.ts               Bootstrap + Swagger + CORS
-│   │       ├── app.module.ts         Root module (config, guards, interceptors)
-│   │       ├── auth/                 API key authentication guard
-│   │       ├── cache/                In-memory TTL cache service
-│   │       ├── config/               Configuration module (env vars)
-│   │       ├── filters/              Global exception filter
-│   │       ├── health/               Health check endpoints
-│   │       ├── interceptors/         Request logging interceptor
-│   │       └── jobs/
-│   │           ├── jobs.controller.ts    POST /api/jobs/search + /analyze
-│   │           ├── jobs.service.ts       Concurrent aggregation + post-processing
-│   │           └── jobs.module.ts        Imports all source + analytics modules
-│   │
-│   └── cli/                          nest-commander CLI application
-│       └── src/
-│           ├── main.ts               CLI bootstrap (CommandFactory)
-│           ├── cli.module.ts         Imports all source + analytics modules
-│           └── commands/
-│               ├── search.command.ts    CLI search with --analyze, --bd, 30+ options
-│               └── compare.command.ts   Multi-site comparison with table output
-│
-├── packages/
-│   ├── models/                       @ever-jobs/models
-│   ├── common/                       @ever-jobs/common (HttpClient, converters, utils)
-│   ├── analytics/                    @ever-jobs/analytics
-│   ├── source-*/                     Search source modules (×105)
-│   ├── source-ats-*/                 ATS source modules (×38)
-│   └── source-company-*/             Company-specific source modules (×15)
-│
-├── .github/
-│   ├── workflows/ci.yml              CI pipeline (build, type-check, Docker)
-│   ├── CODE_OF_CONDUCT.md
-│   ├── CONTRIBUTING.md
-│   ├── SECURITY.md
-│   └── SUPPORT.md
-│
-├── docs/                             Project documentation
-│   ├── ARCHITECTURE_OVERVIEW.md
-│   ├── API_CHANGELOG.md
-│   ├── DEPLOYMENT.md
-│   ├── FAQ.md
-│   ├── GLOSSARY.md
-│   ├── PERFORMANCE_TUNING.md
-│   ├── ROADMAP.md
-│   ├── SECURITY_GUIDELINES.md
-│   └── UPGRADE_GUIDE.md
-│
-├── Dockerfile                        Multi-stage Docker build
-├── docker-compose.yml                Production deployment
-├── docker-compose.dev.yml            Development with hot-reload
-├── Makefile                          Dev & Docker shortcuts
-├── .env.example                      Environment variable template
-├── tool_manifest.json                Machine-readable tool metadata for MCP/LLMs
-├── package.json
-├── tsconfig.base.json
-├── nx.json
-└── nest-cli.json
-```
-
----
-
-## Architecture
-
-### Modular Design
-
-Each job board source is an independent NestJS package that implements the `IScraper` interface:
-
-```typescript
-interface IScraper {
-  scrape(input: ScraperInputDto): Promise<JobResponseDto>;
-}
-```
-
-This means you can:
-
-- **Import individual packages** into your own NestJS application
-- **Add new sources** by creating a new package that implements `IScraper`
-- **Test sources independently** without the API layer
-
-### Concurrent Execution
+- Docker: `docker build -t sherlock .`
+- Run: `docker run -p 3001:3001 sherlock`
+- Render/Heroku: push the repo, add env vars, and deploy
 
 The `JobsService` orchestrator runs all selected sources concurrently using `Promise.allSettled`. Individual source failures don't affect other sources — results from successful sources are still returned.
 
