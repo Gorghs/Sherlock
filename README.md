@@ -198,36 +198,6 @@ Job aggregator covering 80+ countries with locale-based searches. Requires `CARE
 
 ---
 
-## Using Individual Packages
-
-Each source package can be used independently in your own NestJS application:
-
-```typescript
-import { Module } from "@nestjs/common";
-import { LinkedInModule, LinkedInService } from "@ever-jobs/source-linkedin";
-import { ScraperInputDto } from "@ever-jobs/models";
-
-@Module({
-  imports: [LinkedInModule],
-})
-export class MyModule {
-  constructor(private readonly linkedin: LinkedInService) {}
-
-  async searchLinkedIn() {
-    const input = new ScraperInputDto({
-      searchTerm: "TypeScript developer",
-      location: "Remote",
-      resultsWanted: 10,
-      linkedinFetchDescription: true,
-    });
-
-    const response = await this.linkedin.scrape(input);
-    console.log(`Found ${response.jobs.length} LinkedIn jobs`);
-  }
-}
-```
-
----
 
 ## Tips & Limitations
 
@@ -239,44 +209,10 @@ export class MyModule {
 
 > **All job boards** cap results at approximately 1,000 jobs per search query.
 
-### Indeed Limitations
-
-Only **one** of these filters can be active per search:
-
-- `hoursOld`
-- `jobType` + `isRemote`
-- `easyApply`
-
-### LinkedIn Limitations
-
-Only **one** of these filters can be active per search:
-
-- `hoursOld`
-- `easyApply`
-
----
-
-## FAQ
-
-**Q: Indeed is returning unrelated jobs?**
-Indeed searches job descriptions too. Use `-` to exclude terms and `""` for exact match:
 
 ```
 "engineering intern" software summer (java OR python OR c++) 2025 -tax -marketing
 ```
-
-**Q: Getting 429 (Too Many Requests)?**
-You've been rate-limited. Solutions:
-
-- Use `rateDelayMin` and `rateDelayMax` to add configurable delay between requests
-- Use the `proxies` parameter to rotate IPs
-- Reduce `resultsWanted`
-
-**Q: No results from Google?**
-Google requires very specific query syntax. Search for jobs on Google in your browser, then copy the exact search box text into `googleSearchTerm`.
-
----
-
 ## Development
 
 ### Build
@@ -312,9 +248,6 @@ npx jest --verbose --no-coverage --testPathPatterns __tests__
 
 ---
 
-## ChatGPT & LLM Integration
-
-Ever Jobs is designed to be used as a tool by ChatGPT, Claude, and other LLMs.
 
 ### Quick Start
 
@@ -337,51 +270,6 @@ curl -X POST http://localhost:3001/api/jobs/analyze \
   -d '{"searchTerm": "fullstack", "siteType": ["indeed"], "resultsWanted": 10}'
 ```
 
-### Analytics Features
-
-| Feature         | CLI Flag          | API Endpoint             | Description                           |
-| --------------- | ----------------- | ------------------------ | ------------------------------------- |
-| Summary stats   | `--analyze`       | `POST /api/jobs/analyze` | Remote %, salary range, top companies |
-| BD intelligence | `--bd`            | —                        | Company analysis with hiring velocity |
-| Site comparison | `compare` command | —                        | Cross-board metrics comparison table  |
-
-### Prompt Templates
-
-**Job Market Research:**
-
-```
-Search for "senior react developer" jobs in San Francisco on Indeed and LinkedIn.
-Use the analyze flag to get summary statistics.
-
-Input: {"searchTerm": "senior react developer", "location": "San Francisco, CA", "siteType": ["indeed", "linkedin"], "resultsWanted": 20}
-```
-
-**BD Intelligence:**
-
-```
-Find companies hiring AI/ML engineers. Identify which companies have the most
-open positions and what locations they're hiring in.
-
-Input: {"searchTerm": "AI ML engineer", "siteType": ["indeed", "linkedin"], "resultsWanted": 50}
-Use --bd flag for company-level analysis.
-```
-
-**Multi-Site Comparison:**
-
-```
-Compare results for "data engineer" across all job boards.
-Which board has the most listings? Best salary coverage?
-
-Run: npm run cli -- compare --search-term "data engineer" --results 15
-```
-
-### Resources
-
-| File                                       | Description                                    |
-| ------------------------------------------ | ---------------------------------------------- |
-| [`tool_manifest.json`](tool_manifest.json) | Machine-readable tool metadata for MCP servers |
-
----
 
 ## Contributing
 
