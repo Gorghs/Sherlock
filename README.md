@@ -33,50 +33,6 @@ SCHEDULER_ENABLED=true
 SCHEDULER_TIME=0 9 * * *
 ```
 
-## Usage
-
-```bash
-curl -X POST http://localhost:3001/api/jobs/search \
-  -H "Content-Type: application/json" \
-  -d '{"searchTerm":"Product Manager","siteNames":["linkedin","indeed"],"resultsWanted":50}'
-```
-
-## Deploy
-
-- Docker: `docker build -t sherlock .`
-- Run: `docker run -p 3001:3001 sherlock`
-- Render/Heroku: push the repo, add env vars, and deploy
-
-The `JobsService` orchestrator runs all selected sources concurrently using `Promise.allSettled`. Individual source failures don't affect other sources — results from successful sources are still returned.
-
-### Routing Logic
-
-The service intelligently routes requests based on the input:
-
-- **No `siteType` + no `companySlug`** → Runs search + company scrapers (ATS scrapers skipped — they need a company slug)
-- **`companySlug` provided** → Runs ATS scrapers only (Ashby, Greenhouse, Lever, etc.)
-- **Explicit `siteType`** → Runs exactly the specified scrapers, regardless of other parameters
-
-### Post-Processing Pipeline
-
-After searching, the orchestrator applies post-processing:
-
-1. **Tag jobs with source** — Each job is tagged with its originating site
-2. **Salary enrichment** — For USA jobs without direct compensation, salary is extracted from the description text
-3. **Annual salary normalization** — When `enforceAnnualSalary` is enabled, hourly/monthly/weekly wages are converted to annual equivalents
-4. **Sorting** — Results are sorted by site name, then by date posted (newest first)
-
-### HTTP Client
-
-A custom `HttpClient` wraps Axios with:
-
-- **Rotating proxy support** — Round-robin through HTTP/HTTPS/SOCKS5 proxies
-- **Rate limiting** — Configurable min/max delay between requests
-- **Automatic retries** — Configurable retry logic with exponential backoff
-- **Custom CA certificates** — For enterprise proxy setups
-- **Configurable timeouts** — Per-request and global timeout settings
-
----
 
 ## Supported Countries
 
@@ -221,54 +177,6 @@ Job aggregator covering 80+ countries with locale-based searches. Requires `CARE
 npm run build
 ```
 
-### Type Check
-
-```bash
-npx tsc --project tsconfig.base.json --noEmit
-```
-
-### Production Start
-
-```bash
-npm run start:prod
-```
-
-### Run Tests
-
-```bash
-# Run all unit tests
-npm test
-
-# Run specific test suite
-npx jest packages/common/__tests__/helpers.spec.ts --no-coverage
-
-# Run with verbose output
-npx jest --verbose --no-coverage --testPathPatterns __tests__
-```
-
----
-
-
-### Quick Start
-
-```bash
-# Basic search via JSON stdin
-echo '{"searchTerm": "data scientist", "siteType": ["indeed"], "resultsWanted": 5}' | npm run cli -- search --stdin
-
-# Search with analysis
-npm run cli -- search --search-term "devops" --site indeed --analyze
-
-# BD intelligence mode
-npm run cli -- search --search-term "machine learning" --site linkedin --bd
-
-# Multi-site comparison
-npm run cli -- compare --search-term "backend developer" --results 10
-
-# API endpoint for analysis
-curl -X POST http://localhost:3001/api/jobs/analyze \
-  -H 'Content-Type: application/json' \
-  -d '{"searchTerm": "fullstack", "siteType": ["indeed"], "resultsWanted": 10}'
-```
 
 
 ## Contributing
